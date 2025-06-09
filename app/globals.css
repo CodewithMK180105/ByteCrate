@@ -1,0 +1,223 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221 83% 53%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 221 83% 53%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Enhanced animations and transitions */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s
+    ease;
+}
+
+/* Ensure smooth theme transitions */
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-from-top {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-from-left {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 hsl(var(--primary) / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px hsl(var(--primary) / 0);
+  }
+}
+
+.animate-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+.slide-in-from-top-2 {
+  animation: slide-in-from-top 0.2s ease-out;
+}
+
+.slide-in-from-left {
+  animation: slide-in-from-left 0.3s ease-out;
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+/* Hover effects */
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+}
+
+/* Focus styles */
+.focus-ring:focus {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary));
+}
+
+/* Dark mode specific enhancements */
+.dark {
+  color-scheme: dark;
+}
+
+.dark img {
+  opacity: 0.9;
+}
+
+.dark .bg-gradient-to-br {
+  background-image: linear-gradient(to bottom right, hsl(var(--primary) / 0.1), hsl(var(--secondary) / 0.1));
+}
+
+/* Pricing card specific styles */
+.pricing-card {
+  backdrop-filter: blur(10px);
+  background: hsl(var(--card) / 0.8);
+}
+
+.dark .pricing-card {
+  background: hsl(var(--card) / 0.9);
+  border: 1px solid hsl(var(--border));
+}
+
+/* Enhanced button hover effects */
+.btn-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px hsl(var(--primary) / 0.3);
+}
+
+/* Gradient text effect */
+.gradient-text {
+  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary)) 40%, hsl(var(--accent-foreground)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Responsive layout fixes */
+@media (max-width: 768px) {
+  .dashboard-main {
+    margin-left: 0 !important;
+  }
+}
+
+/* Ensure proper spacing for sidebar transitions */
+.sidebar-transition {
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+/* Mobile sidebar overlay */
+.mobile-sidebar-overlay {
+  backdrop-filter: blur(4px);
+}
