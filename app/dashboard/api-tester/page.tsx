@@ -71,7 +71,7 @@ export default function APITesterPage() {
           <Globe className="h-5 w-5 text-primary" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">API Tester</h1>
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold tracking-tight">API Tester</h1>
           <p className="text-muted-foreground">Test REST APIs with custom headers and payloads</p>
         </div>
       </div>
@@ -79,7 +79,7 @@ export default function APITesterPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card>
           <CardHeader>
-            <CardTitle>Request Configuration</CardTitle>
+            <CardTitle className="text-lg md:text-xl lg:text-2xl font-bold">Request Configuration</CardTitle>
             <CardDescription>Configure your API request parameters</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -154,7 +154,7 @@ export default function APITesterPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Response</CardTitle>
+            <CardTitle className="text-lg md:text-xl lg:text-2xl font-bold">Response</CardTitle>
             <CardDescription>API response will appear here</CardDescription>
             {statusCode > 0 && (
               <div className="flex items-center space-x-4 pt-2">

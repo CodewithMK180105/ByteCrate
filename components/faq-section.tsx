@@ -38,8 +38,8 @@ export function FAQSection() {
     <section className="py-20 bg-muted/50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
+          <p className="text-base md:text-xl text-muted-foreground max-w-2xl mx-auto">
             Got questions? We've got answers. If you can't find what you're looking for, feel free to reach out to us.
           </p>
         </div>

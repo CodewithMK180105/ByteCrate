@@ -53,6 +53,7 @@ export function Navbar() {
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-2">
             <ModeToggle />
+            <ColorPicker />
             <Button variant="ghost" size="sm" onClick={() => setIsOpen(!isOpen)}>
               {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
@@ -75,7 +76,7 @@ export function Navbar() {
               Dashboard
             </Link>
             <div className="pt-4 space-y-2">
-              <ColorPicker />
+              
               <Link href="/auth" className="block">
                 <Button variant="ghost" size="sm" className="w-full justify-start">
                   Sign In

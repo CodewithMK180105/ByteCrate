@@ -54,13 +54,13 @@ export default function ImageToolsPage() {
           <ImageIcon className="h-5 w-5 text-primary" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Image Tools</h1>
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold tracking-tight">Image Tools</h1>
           <p className="text-muted-foreground">Convert, resize, and generate images and QR codes</p>
         </div>
       </div>
 
       <Tabs defaultValue="convert" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
           <TabsTrigger value="convert">Convert</TabsTrigger>
           <TabsTrigger value="resize">Resize</TabsTrigger>
           <TabsTrigger value="qr">QR Code</TabsTrigger>
@@ -71,7 +71,7 @@ export default function ImageToolsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center">
+                <CardTitle className="flex items-center text-lg md:text-xl lg:text-2xl font-bold">
                   <Upload className="mr-2 h-4 w-4" />
                   Image Converter
                 </CardTitle>
@@ -125,7 +125,7 @@ export default function ImageToolsPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Supported Formats</CardTitle>
+                <CardTitle className="text-lg md:text-xl lg:text-2xl font-bold">Supported Formats</CardTitle>
                 <CardDescription>Input and output format compatibility</CardDescription>
               </CardHeader>
               <CardContent>
@@ -159,7 +159,7 @@ export default function ImageToolsPage() {
         <TabsContent value="resize" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center">
+              <CardTitle className="flex items-center text-lg md:text-xl lg:text-2xl font-bold">
                 <Crop className="mr-2 h-4 w-4" />
                 Image Resizer
               </CardTitle>
@@ -229,7 +229,7 @@ export default function ImageToolsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center">
+                <CardTitle className="flex items-center text-lg md:text-xl lg:text-2xl font-bold">
                   <QrCode className="mr-2 h-4 w-4" />
                   QR Code Generator
                 </CardTitle>
@@ -282,7 +282,7 @@ export default function ImageToolsPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle>QR Code Preview</CardTitle>
+                <CardTitle className="text-lg md:text-xl lg:text-2xl font-bold">QR Code Preview</CardTitle>
                 <CardDescription>Generated QR code will appear here</CardDescription>
               </CardHeader>
               <CardContent>
@@ -302,7 +302,7 @@ export default function ImageToolsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center">
+                <CardTitle className="flex items-center text-lg md:text-xl lg:text-2xl font-bold">
                   <Palette className="mr-2 h-4 w-4" />
                   Color Picker
                 </CardTitle>
@@ -351,7 +351,7 @@ export default function ImageToolsPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Extract Colors from Image</CardTitle>
+                <CardTitle className="text-lg md:text-xl lg:text-2xl font-bold">Extract Colors from Image</CardTitle>
                 <CardDescription>Get color palette from uploaded images</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">

@@ -74,7 +74,7 @@ export default function PasswordGeneratorPage() {
           <Key className="h-5 w-5 text-primary" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Password Generator</h1>
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold tracking-tight">Password Generator</h1>
           <p className="text-muted-foreground">Generate secure passwords with custom options</p>
         </div>
       </div>
@@ -82,7 +82,7 @@ export default function PasswordGeneratorPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card>
           <CardHeader>
-            <CardTitle>Password Settings</CardTitle>
+            <CardTitle className="text-lg md:text-xl lg:text-2xl font-bold">Password Settings</CardTitle>
             <CardDescription>Customize your password requirements</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -137,7 +137,7 @@ export default function PasswordGeneratorPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Generated Password</CardTitle>
+            <CardTitle className="text-lg md:text-xl lg:text-2xl font-bold">Generated Password</CardTitle>
             <CardDescription>Your secure password will appear here</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">

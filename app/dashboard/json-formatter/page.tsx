@@ -383,15 +383,15 @@ export default function JSONFormatterPage() {
           <FileText className="h-5 w-5 text-primary" />
         </div>
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Text Formatter</h1>
-          <p className="text-muted-foreground">Format, validate and beautify JSON, XML, YAML, and Markdown</p>
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold tracking-tight">Text Formatter</h1>
+          <p className="text-sm md:text-base text-muted-foreground">Format, validate and beautify JSON, XML, YAML, and Markdown</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-8">
         <Card className="w-full">
           <CardHeader>
-            <CardTitle>Input</CardTitle>
+            <CardTitle className="text-lg md:text-xl lg:text-2xl font-bold">Input</CardTitle>
             <CardDescription>Paste your data here to format</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -437,7 +437,7 @@ export default function JSONFormatterPage() {
 
         <Card className="w-full">
           <CardHeader>
-            <CardTitle>Output</CardTitle>
+            <CardTitle className="text-lg md:text-xl lg:text-2xl font-bold">Output</CardTitle>
             <CardDescription>Formatted result will appear here</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">

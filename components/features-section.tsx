@@ -49,8 +49,8 @@ export function FeaturesSection() {
     <section id="features" className="py-20 bg-muted/50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-4">Everything You Need in One Place</h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">Everything You Need in One Place</h2>
+          <p className="text-base md:text-xl text-muted-foreground max-w-2xl mx-auto">
             A comprehensive suite of developer tools designed to boost your productivity and streamline your workflow.
           </p>
         </div>
@@ -62,7 +62,7 @@ export function FeaturesSection() {
                 <div className="w-10 h-10 md:w-12 md:h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
                   <feature.icon className="h-5 w-5 md:h-6 md:w-6 text-primary" />
                 </div>
-                <CardTitle className="text-base md:text-lg">{feature.title}</CardTitle>
+                <CardTitle className="text-sm md:text-lg">{feature.title}</CardTitle>
               </CardHeader>
               <CardContent className="p-4 md:p-6 pt-0">
                 <CardDescription className="text-xs md:text-sm leading-relaxed">{feature.description}</CardDescription>

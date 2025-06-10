@@ -310,7 +310,7 @@ export default function CodeBeautifierPage() {
           <Code className="h-5 w-5 text-primary" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Code Beautifier</h1>
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold tracking-tight">Code Beautifier</h1>
           <p className="text-muted-foreground">Format and beautify HTML, CSS, JavaScript, and JSON</p>
         </div>
       </div>
@@ -318,7 +318,7 @@ export default function CodeBeautifierPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card>
           <CardHeader>
-            <CardTitle>Input Code</CardTitle>
+            <CardTitle className="text-lg md:text-xl lg:text-2xl font-bold">Input Code</CardTitle>
             <CardDescription>Paste your code or upload a file</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -382,7 +382,7 @@ export default function CodeBeautifierPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Formatted Code</CardTitle>
+            <CardTitle className="text-lg md:text-xl lg:text-2xl font-bold">Formatted Code</CardTitle>
             <CardDescription>Beautified code will appear here</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -430,29 +430,29 @@ export default function CodeBeautifierPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Supported Languages</CardTitle>
+          <CardTitle className="text-lg md:text-xl lg:text-2xl font-bold">Supported Languages</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="text-center p-4 border rounded-lg">
               <Code className="h-8 w-8 mx-auto mb-2 text-primary" />
-              <h4 className="font-medium">JavaScript</h4>
-              <p className="text-sm text-muted-foreground">Format JS code with proper indentation</p>
+              <h4 className="font-medium mb-2">JavaScript</h4>
+              <p className="max-sm:text-xs text-muted-foreground">Format JS code with proper indentation</p>
             </div>
             <div className="text-center p-4 border rounded-lg">
               <Code className="h-8 w-8 mx-auto mb-2 text-primary" />
-              <h4 className="font-medium">HTML</h4>
-              <p className="text-sm text-muted-foreground">Structure HTML with clean formatting</p>
+              <h4 className="font-medium mb-2">HTML</h4>
+              <p className="max-sm:text-xs text-muted-foreground">Structure HTML with clean formatting</p>
             </div>
             <div className="text-center p-4 border rounded-lg">
               <Code className="h-8 w-8 mx-auto mb-2 text-primary" />
-              <h4 className="font-medium">CSS</h4>
-              <p className="text-sm text-muted-foreground">Organize CSS rules and properties</p>
+              <h4 className="font-medium mb-2">CSS</h4>
+              <p className="max-sm:text-xs text-muted-foreground">Organize CSS rules and properties</p>
             </div>
             <div className="text-center p-4 border rounded-lg">
               <Code className="h-8 w-8 mx-auto mb-2 text-primary" />
-              <h4 className="font-medium">JSON</h4>
-              <p className="text-sm text-muted-foreground">Validate and format JSON data</p>
+              <h4 className="font-medium mb-2">JSON</h4>
+              <p className="max-sm:text-xs text-muted-foreground">Validate and format JSON data</p>
             </div>
           </div>
         </CardContent>

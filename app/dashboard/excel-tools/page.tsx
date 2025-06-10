@@ -119,13 +119,13 @@ export default function ExcelToolsPage() {
           <FileSpreadsheet className="h-5 w-5 text-primary" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Excel & CSV Tools</h1>
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold tracking-tight">Excel & CSV Tools</h1>
           <p className="text-muted-foreground">Convert, generate, and manipulate spreadsheet data</p>
         </div>
       </div>
 
       <Tabs defaultValue="upload" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-1 md:grid-cols-3">
           <TabsTrigger value="upload">Upload & Convert</TabsTrigger>
           <TabsTrigger value="generate">Generate Mock Data</TabsTrigger>
           <TabsTrigger value="edit">Edit Data</TabsTrigger>
@@ -134,7 +134,7 @@ export default function ExcelToolsPage() {
         <TabsContent value="upload" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center">
+              <CardTitle className="flex items-center text-lg md:text-xl lg:text-2xl font-bold">
                 <Upload className="mr-2 h-4 w-4" />
                 Upload CSV File
               </CardTitle>
@@ -159,7 +159,7 @@ export default function ExcelToolsPage() {
         <TabsContent value="generate" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center">
+              <CardTitle className="flex items-center text-lg md:text-xl lg:text-2xl font-bold">
                 <Plus className="mr-2 h-4 w-4" />
                 Generate Mock Data
               </CardTitle>
