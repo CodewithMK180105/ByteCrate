@@ -9,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Copy, Check, FileText, AlertCircle } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { FullscreenToggle } from "@/components/ui/fullscreen-toggle"
+import YAML from 'yaml'
+import { MarkdownPreview } from "@/components/mark-down-preview"
 
 export default function JSONFormatterPage() {
   const [input, setInput] = useState("")
@@ -44,133 +46,189 @@ export default function JSONFormatterPage() {
     }
   }
 
-  // YAML Formatter
+  const needsQuoting = (str: string) => {
+    return /[:{}[\],&*#?|<>=!%@`'"\\\s]/.test(str) || str === "" || str === "null" || str.match(/^\d+$/);
+  };
+  
+  const quoteIfNeeded = (str: string) => {
+    const trimmed = str.trim();
+    return needsQuoting(trimmed)
+      ? `"${trimmed.replace(/"/g, '\\"').replace(/\n/g, '\\n')}"`
+      : trimmed;
+  };
+  
+  const preprocessFakeYAML = (input: string): string => {
+    const resultLines: string[] = [];
+    const seenKeys: Map<string, number> = new Map();
+    let indentLevel = 0;
+    const indentSize = 2;
+  
+    let cleanedInput = input
+      .replace(/^['"]|['"]$/g, '')
+      .trim();
+  
+    const lines = cleanedInput
+      .split('\n')
+      .map(line => line.trimEnd())
+      .filter(line => line && !line.match(/^#/));
+  
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const currentIndent = line.match(/^\s*/)?.[0].length || 0;
+      if (currentIndent < indentLevel) {
+        indentLevel = Math.max(0, currentIndent);
+      }
+  
+      // Sequence items
+      if (line.match(/^\s*-\s+/)) {
+        const item = line.replace(/^\s*-\s*/, '').trim();
+        if (!item) {
+          resultLines.push(`${' '.repeat(indentLevel)}-`);
+          continue;
+        }
+  
+        if (item.match(/[a-zA-Z0-9_-]+:\s*/)) {
+          const [subKey, ...subRest] = item.split(/:\s*/);
+          const subValue = subRest.join(':').trim();
+          let subUniqueKey = subKey.trim();
+          if (seenKeys.has(subUniqueKey)) {
+            const count = seenKeys.get(subUniqueKey)! + 1;
+            seenKeys.set(subUniqueKey, count);
+            subUniqueKey = `${subUniqueKey}_${count}`;
+          } else {
+            seenKeys.set(subUniqueKey, 0);
+          }
+          resultLines.push(`${' '.repeat(indentLevel)}- ${subUniqueKey}: ${subValue ? quoteIfNeeded(subValue) : ''}`);
+  
+          while (i + 1 < lines.length && lines[i + 1].match(/^\s+[a-zA-Z0-9_-]+:\s*/)) {
+            i++;
+            const nestedLine = lines[i].replace(/^\s+/, '').trim();
+            const nestedIndent = lines[i].match(/^\s*/)?.[0].length || 0;
+            const [nestedKey, ...nestedRest] = nestedLine.split(/:\s*/);
+            const nestedValue = nestedRest.join(':').trim();
+            let nestedUniqueKey = nestedKey.trim();
+            if (seenKeys.has(nestedUniqueKey)) {
+              const count = seenKeys.get(nestedUniqueKey)! + 1;
+              seenKeys.set(nestedUniqueKey, count);
+              nestedUniqueKey = `${nestedUniqueKey}_${count}`;
+            } else {
+              seenKeys.set(nestedUniqueKey, 0);
+            }
+            resultLines.push(`${' '.repeat(indentLevel + (nestedIndent - currentIndent))}${nestedUniqueKey}: ${nestedValue ? quoteIfNeeded(nestedValue) : ''}`);
+          }
+        } else {
+          resultLines.push(`${' '.repeat(indentLevel)}- ${quoteIfNeeded(item)}`);
+        }
+        continue;
+      }
+  
+      const separatorMatch = line.match(/:\s*/);
+      if (!separatorMatch) {
+        if (line.trim()) {
+          resultLines.push(`${' '.repeat(indentLevel)}${quoteIfNeeded(line.trim())}`);
+        }
+        continue;
+      }
+  
+      const [key, ...rest] = line.split(/:\s*/);
+      const value = rest.join(':').trim();
+      let uniqueKey = key.trim();
+      if (!uniqueKey) continue;
+      if (seenKeys.has(uniqueKey)) {
+        const count = seenKeys.get(uniqueKey)! + 1;
+        seenKeys.set(uniqueKey, count);
+        uniqueKey = `${uniqueKey}_${count}`;
+      } else {
+        seenKeys.set(uniqueKey, 0);
+      }
+  
+      // ✅ Handle inline list like: tech_stack: - React - Node.js
+      if (value.startsWith('- ')) {
+        const items = value
+          .split('- ')
+          .map(item => item.trim())
+          .filter(item => item.length > 0);
+        resultLines.push(`${' '.repeat(indentLevel)}${uniqueKey}:`);
+        for (const item of items) {
+          resultLines.push(`${' '.repeat(indentLevel + indentSize)}- ${quoteIfNeeded(item)}`);
+        }
+        continue;
+      }
+  
+      // Handle inline nested mappings
+      if (value.match(/[a-zA-Z0-9_-]+:\s*/)) {
+        resultLines.push(`${' '.repeat(indentLevel)}${uniqueKey}:`);
+        indentLevel += indentSize;
+  
+        const subPairs = value
+          .split(/(?=\s*[a-zA-Z0-9_-]+:\s*)/)
+          .map(sub => sub.trim())
+          .filter(sub => sub);
+  
+        for (const subPair of subPairs) {
+          const [subKey, ...subRest] = subPair.split(/:\s*/);
+          const subValue = subRest.join(':').trim();
+          if (subKey) {
+            let subUniqueKey = subKey.trim();
+            if (seenKeys.has(subUniqueKey)) {
+              const count = seenKeys.get(subUniqueKey)! + 1;
+              seenKeys.set(subUniqueKey, count);
+              subUniqueKey = `${subUniqueKey}_${count}`;
+            } else {
+              seenKeys.set(subUniqueKey, 0);
+            }
+            resultLines.push(`${' '.repeat(indentLevel)}${subUniqueKey}: ${subValue ? quoteIfNeeded(subValue) : ''}`);
+          }
+        }
+        indentLevel -= indentSize;
+        continue;
+      }
+  
+      // Normal key-value
+      if (value) {
+        resultLines.push(`${' '.repeat(indentLevel)}${uniqueKey}: ${quoteIfNeeded(value)}`);
+      } else {
+        resultLines.push(`${' '.repeat(indentLevel)}${uniqueKey}:`);
+        indentLevel += indentSize;
+      }
+    }
+  
+    return resultLines.join('\n').trim();
+  };
+  
+  
   const formatYAML = () => {
     try {
-      // Try to parse as JSON first, then convert to YAML
+      if (!input || typeof input !== 'string') {
+        throw new Error('No input provided');
+      }
+  
+      let yaml = '';
+  
       try {
-        const parsed = JSON.parse(input)
-        setOutput(jsonToYAML(parsed))
+        // Try parsing as valid YAML first
+        const parsedYAML = YAML.parse(input);
+        yaml = YAML.stringify(parsedYAML);
       } catch {
-        // If not valid JSON, try to format YAML directly
-        const yamlFormatted = formatYAMLDirectly(input)
-        setOutput(yamlFormatted)
+        // Fallback: Preprocess fake YAML
+        const preprocessed = preprocessFakeYAML(input);
+        try {
+          // Parse as YAML to validate
+          const parsedYAML = YAML.parse(preprocessed);
+          yaml = YAML.stringify(parsedYAML);
+        } catch (eParse) {
+          throw new Error(`Invalid YAML structure: ${(eParse as Error).message}\nPreprocessed:\n${preprocessed}`);
+        }
       }
-      setError("")
+  
+      setOutput(yaml);
+      setError('');
     } catch (err) {
-      setError(`YAML formatting error: ${(err as Error).message}`)
-      setOutput("")
+      setError(`YAML formatting error: ${(err as Error).message}`);
+      setOutput('');
     }
-  }
-
-  // Helper function to format YAML directly
-  const formatYAMLDirectly = (yamlInput: string): string => {
-    const lines = yamlInput.split("\n")
-    let indentLevel = 0
-    const formattedLines: string[] = []
-
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim()
-      if (!line || line.startsWith("#")) {
-        formattedLines.push(line)
-        continue
-      }
-
-      // Check for list items
-      if (line.startsWith("-")) {
-        const spaces = "  ".repeat(indentLevel)
-        formattedLines.push(`${spaces}${line}`)
-
-        // If the list item has a nested structure, increase indent
-        if (line.includes(":") && !line.endsWith(":")) {
-          indentLevel++
-        }
-        continue
-      }
-
-      // Handle key-value pairs
-      if (line.includes(":")) {
-        const colonIndex = line.indexOf(":")
-        const key = line.substring(0, colonIndex).trim()
-        const value = line.substring(colonIndex + 1).trim()
-
-        const spaces = "  ".repeat(indentLevel)
-
-        // Check if this is a key with nested structure
-        if (value === "") {
-          formattedLines.push(`${spaces}${key}:`)
-          indentLevel++
-        } else {
-          formattedLines.push(`${spaces}${key}: ${value}`)
-        }
-        continue
-      }
-
-      // Handle closing indentation
-      if (line === "}" || line === "]") {
-        indentLevel = Math.max(0, indentLevel - 1)
-        const spaces = "  ".repeat(indentLevel)
-        formattedLines.push(`${spaces}${line}`)
-        continue
-      }
-
-      // Default case
-      const spaces = "  ".repeat(indentLevel)
-      formattedLines.push(`${spaces}${line}`)
-    }
-
-    return formattedLines.join("\n")
-  }
-
-  // Helper function to convert JSON to YAML
-  const jsonToYAML = (obj: any, indent = 0): string => {
-    const spaces = "  ".repeat(indent)
-
-    if (obj === null) return "null"
-    if (typeof obj === "boolean" || typeof obj === "number") return obj.toString()
-    if (typeof obj === "string") {
-      // Handle multiline strings with pipe character
-      if (obj.includes("\n")) {
-        return `|\n${spaces}  ${obj.replace(/\n/g, `\n${spaces}  `)}`
-      }
-      // Escape special characters in YAML
-      if (obj.match(/[:{}[\],&*#?|<>=!%@`]/)) {
-        return `"${obj.replace(/"/g, '\\"')}"`
-      }
-      return obj
-    }
-
-    if (Array.isArray(obj)) {
-      if (obj.length === 0) return "[]"
-      return obj
-        .map((item) => {
-          const itemYaml = jsonToYAML(item, indent + 1)
-          // For simple values in arrays
-          if (typeof item !== "object" || item === null) {
-            return `${spaces}- ${itemYaml}`
-          }
-          // For objects in arrays
-          return `${spaces}-\n${spaces}  ${itemYaml.replace(/\n/g, `\n${spaces}  `)}`
-        })
-        .join("\n")
-    }
-
-    if (typeof obj === "object") {
-      if (Object.keys(obj).length === 0) return "{}"
-      return Object.entries(obj)
-        .map(([key, value]) => {
-          const formattedValue = jsonToYAML(value, indent + 1)
-          if (typeof value === "object" && value !== null) {
-            return `${spaces}${key}:\n${spaces}  ${formattedValue.replace(/\n/g, `\n${spaces}  `)}`
-          }
-          return `${spaces}${key}: ${formattedValue}`
-        })
-        .join("\n")
-    }
-
-    return String(obj)
-  }
-
+  };
+  
   // Markdown Formatter
   const formatMarkdown = () => {
     try {
@@ -470,12 +528,7 @@ export default function JSONFormatterPage() {
                 </div>
 
                 {format === "markdown" && showPreview ? (
-                  <FullscreenToggle title="Markdown Preview" contentClassName="min-h-[300px]">
-                    <div
-                      className="min-h-[300px] p-4 border rounded-md bg-background prose prose-sm max-w-none dark:prose-invert overflow-auto"
-                      dangerouslySetInnerHTML={{ __html: renderMarkdownPreview(output) }}
-                    />
-                  </FullscreenToggle>
+                  <MarkdownPreview output={output} />
                 ) : (
                   <FullscreenToggle title={`${format.toUpperCase()} Output`} contentClassName="min-h-[300px]">
                     <Textarea value={output} readOnly className="min-h-[300px] font-mono resize-none" />
