@@ -40,7 +40,7 @@ const navigation = [
 
 const tools = [
   {
-    name: "JSON Formatter",
+    name: "Data Formatter",
     href: "/dashboard/json-formatter",
     icon: Braces,
   },

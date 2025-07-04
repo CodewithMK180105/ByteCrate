@@ -6,7 +6,7 @@ import Link from "next/link"
 const tools = [
   {
     id: "json-formatter",
-    name: "JSON Formatter",
+    name: "Data Formatter",
     description: "Format, validate and beautify JSON, XML, YAML, and Markdown data",
     icon: Braces,
     category: "Text",

@@ -530,9 +530,19 @@ export default function JSONFormatterPage() {
                 {format === "markdown" && showPreview ? (
                   <MarkdownPreview output={output} />
                 ) : (
-                  <FullscreenToggle title={`${format.toUpperCase()} Output`} contentClassName="min-h-[300px]">
-                    <Textarea value={output} readOnly className="min-h-[300px] font-mono resize-none" />
+                  <FullscreenToggle
+                    title={`${format.toUpperCase()} Output`}
+                    contentClassName="min-h-[300px]"
+                    fullscreenContentClassName="h-full"
+                  >
+                    <Textarea
+                      value={output}
+                      readOnly
+                      className="w-full min-h-[370px] h-full font-mono resize-none"
+                    />
                   </FullscreenToggle>
+
+
                 )}
               </>
             )}

@@ -84,7 +84,7 @@ export function Footer() {
                 href="/dashboard/json-formatter"
                 className="block text-sm text-muted-foreground hover:text-primary transition-colors"
               >
-                JSON Formatter
+                Data Formatter
               </Link>
               <Link
                 href="/dashboard/api-tester"

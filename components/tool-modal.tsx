@@ -16,7 +16,7 @@ interface ToolModalProps {
 }
 
 const toolComponents = {
-  "json-formatter": { component: JSONFormatter, title: "JSON Formatter" },
+  "json-formatter": { component: JSONFormatter, title: "Data Formatter" },
   "api-tester": { component: APITester, title: "API Tester" },
   "image-tools": { component: ImageTools, title: "Image Tools" },
   "code-beautifier": { component: CodeBeautifier, title: "Code Beautifier" },

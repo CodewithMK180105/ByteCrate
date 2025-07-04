@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback, type ReactNode } from "react"
+import { useState, useCallback, useEffect, type ReactNode } from "react"
 import { Maximize2, Minimize2, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -9,16 +9,54 @@ interface FullscreenToggleProps {
   children: ReactNode
   className?: string
   contentClassName?: string
+  fullscreenContentClassName?: string
   title?: string
 }
 
-export function FullscreenToggle({ children, className, contentClassName, title = "Content" }: FullscreenToggleProps) {
+export function FullscreenToggle({
+  children,
+  className,
+  contentClassName,
+  fullscreenContentClassName,
+  title = "Content"
+}: FullscreenToggleProps) {
   const [isFullscreen, setIsFullscreen] = useState(false)
 
   const toggleFullscreen = useCallback(() => {
     setIsFullscreen((prev) => !prev)
   }, [])
 
+  // Prevent body scroll in fullscreen
+  useEffect(() => {
+    if (isFullscreen) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = ""
+    }
+
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [isFullscreen])
+
+  // Exit on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsFullscreen(false)
+      }
+    }
+
+    if (isFullscreen) {
+      window.addEventListener("keydown", handleKeyDown)
+    }
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [isFullscreen])
+
+  // Render: Normal View
   if (!isFullscreen) {
     return (
       <div className={cn("relative", className)}>
@@ -34,13 +72,14 @@ export function FullscreenToggle({ children, className, contentClassName, title 
             <span className="sr-only">View fullscreen</span>
           </Button>
         </div>
-        <div className={contentClassName}>{children}</div>
+        <div className={cn(contentClassName)}>{children}</div>
       </div>
     )
   }
 
+  // Render: Fullscreen View
   return (
-    <div className="fixed inset-0 z-50 bg-background flex flex-col p-4 md:p-6 animate-in fade-in-0 zoom-in-95">
+    <div className="fixed inset-0 z-50 bg-background flex flex-col h-screen p-4 md:p-6 animate-in fade-in-0 zoom-in-95">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg md:text-xl font-semibold">{title}</h2>
         <div className="flex items-center gap-2">
@@ -54,7 +93,10 @@ export function FullscreenToggle({ children, className, contentClassName, title 
           </Button>
         </div>
       </div>
-      <div className="flex-1 overflow-auto">{children}</div>
+      <div className={cn("flex-1 overflow-auto flex flex-col", fullscreenContentClassName)}>
+        <div className="flex-1">{children}</div>
+      </div>
+
     </div>
   )
 }

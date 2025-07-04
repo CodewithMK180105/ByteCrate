@@ -4,7 +4,7 @@ import { Braces, Globe, ImageIcon, Code, Table, Key, Network, Shuffle } from "lu
 const features = [
   {
     icon: Braces,
-    title: "JSON Formatter",
+    title: "Data Formatter",
     description: "Format, validate and beautify JSON data with syntax highlighting and error detection.",
   },
   {
