@@ -11,6 +11,11 @@ import { Copy, Check, Code, Download, Upload, AlertCircle } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { FullscreenToggle } from "@/components/ui/fullscreen-toggle"
+import prettier from "prettier/standalone";
+import babelParser from "prettier/parser-babel";
+import htmlParser from "prettier/parser-html";
+import postcssParser from "prettier/parser-postcss";
+import typescriptParser from "prettier/parser-typescript";
 
 export default function CodeBeautifierPage() {
   const [input, setInput] = useState("")
@@ -60,7 +65,7 @@ export default function CodeBeautifierPage() {
         if (!trimmed) return ""
 
         // Adjust indent level based on braces
-        if (trimmed === "}") {
+        if (trimmed === "}") { 
           indentLevel = Math.max(0, indentLevel - 1)
         }
 
@@ -119,67 +124,72 @@ export default function CodeBeautifierPage() {
     }
   }
 
-  const beautifyCSS = (css: string): string => {
-    try {
-      // Remove comments and normalize whitespace
-      const formatted = css
-        .replace(/\/\*[\s\S]*?\*\//g, "") // Remove comments
-        .replace(/\s+/g, " ")
-        .trim()
+  const beautifyCSS = (css: string, baseIndent = ""): string => {
+  try {
+    const formatted = css
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .replace(/\s+/g, " ")
+      .trim();
 
-      // Split into rule blocks
-      const blocks = []
-      let currentBlock = ""
-      let braceCount = 0
+    const formatBlock = (block: string): string => {
+      const openBraceIndex = block.indexOf("{");
+      const closeBraceIndex = block.lastIndexOf("}");
+      if (openBraceIndex === -1 || closeBraceIndex === -1) return baseIndent + block;
 
-      for (let i = 0; i < formatted.length; i++) {
-        const char = formatted[i]
-        currentBlock += char
+      const selector = block.substring(0, openBraceIndex).trim();
+      let inner = block.substring(openBraceIndex + 1, closeBraceIndex).trim();
 
-        if (char === "{") {
-          braceCount++
-        } else if (char === "}") {
-          braceCount--
-          if (braceCount === 0) {
-            blocks.push(currentBlock.trim())
-            currentBlock = ""
-          }
-        }
+      // Extra indentation for nested rules (e.g., inside @media)
+      const indent = baseIndent + "  ";
+
+      if (selector.startsWith("@")) {
+        // For @media, recurse with additional indentation
+        const nested = beautifyCSS(inner, indent);
+        return `${baseIndent}${selector} {\n${nested}\n${baseIndent}}`;
       }
 
-      // Format each block
-      const formattedBlocks = blocks.map((block) => {
-        // Split selector from declarations
-        const openBraceIndex = block.indexOf("{")
-        const closeBraceIndex = block.lastIndexOf("}")
+      // Format normal rule declarations
+      const declarations = inner
+        .split(";")
+        .filter((decl) => decl.trim())
+        .map((decl) => {
+          const colonIndex = decl.indexOf(":");
+          if (colonIndex === -1) return indent + decl.trim();
+          const property = decl.substring(0, colonIndex).trim();
+          const value = decl.substring(colonIndex + 1).trim();
+          return `${indent}  ${property}: ${value};`;
+        })
+        .join("\n");
 
-        if (openBraceIndex === -1 || closeBraceIndex === -1) {
-          return block // Not a valid CSS rule
+      return `${baseIndent}${selector} {\n${declarations}\n${baseIndent}}`;
+    };
+
+    const blocks: string[] = [];
+    let currentBlock = "";
+    let braceCount = 0;
+
+    for (let i = 0; i < formatted.length; i++) {
+      const char = formatted[i];
+      currentBlock += char;
+
+      if (char === "{") {
+        braceCount++;
+      } else if (char === "}") {
+        braceCount--;
+        if (braceCount === 0) {
+          blocks.push(currentBlock.trim());
+          currentBlock = "";
         }
-
-        const selector = block.substring(0, openBraceIndex).trim()
-        const declarations = block
-          .substring(openBraceIndex + 1, closeBraceIndex)
-          .split(";")
-          .filter((decl) => decl.trim())
-          .map((decl) => {
-            const colonIndex = decl.indexOf(":")
-            if (colonIndex === -1) return decl.trim()
-
-            const property = decl.substring(0, colonIndex).trim()
-            const value = decl.substring(colonIndex + 1).trim()
-            return `  ${property}: ${value};`
-          })
-          .join("\n")
-
-        return `${selector} {\n${declarations}\n}`
-      })
-
-      return formattedBlocks.join("\n\n")
-    } catch (err) {
-      throw new Error(`CSS beautification error: ${(err as Error).message}`)
+      }
     }
+
+    return blocks.map(formatBlock).join("\n\n");
+  } catch (err) {
+    throw new Error(`CSS beautification error: ${(err as Error).message}`);
   }
+};
+
+
 
   const beautifyJSON = (json: string): string => {
     try {
@@ -410,7 +420,7 @@ export default function CodeBeautifierPage() {
                 </div>
 
                 <FullscreenToggle title={`${language.toUpperCase()} Output`} contentClassName="min-h-[300px]">
-                  <Textarea value={output} readOnly className="min-h-[300px] font-mono text-sm" />
+                  <Textarea value={output} readOnly className="min-h-[370px] h-full w-full font-mono text-sm" />
                 </FullscreenToggle>
               </>
             )}
